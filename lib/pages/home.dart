@@ -513,7 +513,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 32),
                         SizedBox(
-                          height: 770,
+                          height: 600,
                           child: Scrollbar(
                             controller: _projectsPageController,
                             thumbVisibility: projectPageCount > 1,
@@ -545,29 +545,45 @@ class _HomePageState extends State<HomePage> {
 
                                   return Padding(
                                     padding: const EdgeInsets.only(right: 18),
-                                    child: Column(
-                                      children: projects
-                                          .map(
-                                            (project) => Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: 16,
-                                              ),
-                                              child: ProjectListCard(
-                                                project: project,
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute<void>(
-                                                      builder: (_) =>
-                                                          ProjectDetailPage(
-                                                            project: project,
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) => FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        alignment: Alignment.topCenter,
+                                        child: SizedBox(
+                                          width: constraints.maxWidth,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: projects
+                                                .map(
+                                                  (project) => Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                          bottom: 16,
+                                                        ),
+                                                    child: ProjectListCard(
+                                                      project: project,
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                        ).push(
+                                                          MaterialPageRoute<
+                                                            void
+                                                          >(
+                                                            builder: (_) =>
+                                                                ProjectDetailPage(
+                                                                  project:
+                                                                      project,
+                                                                ),
                                                           ),
+                                                        );
+                                                      },
                                                     ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   );
                                 },
