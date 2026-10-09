@@ -384,69 +384,72 @@ class _HomePageState extends State<HomePage> {
                         // Tech cards grid
                         LayoutBuilder(
                           builder: (context, constraints) {
-                            double cardWidth = 450;
-                            double spacing = 20;
+                            const spacing = 20.0;
+                            final gridWidth = constraints.maxWidth > 920
+                                ? 920.0
+                                : constraints.maxWidth;
+                            final useTwoColumns = gridWidth >= 760;
+                            final cardWidth = useTwoColumns
+                                ? (gridWidth - spacing) / 2
+                                : gridWidth;
+
+                            const cards = [
+                              _TechCard(
+                                title: 'Mobile / Flutter',
+                                titleColor: Color(0xFF2FD0DE),
+                                skills: [
+                                  'Flutter',
+                                  'Dart',
+                                  'Material Design',
+                                  'Cupertino Widgets',
+                                  'Custom Animations',
+                                ],
+                              ),
+                              _TechCard(
+                                title: 'State & Architecture',
+                                titleColor: Color(0xFF2FD0DE),
+                                skills: ['Riverpod', 'Clean Architecture'],
+                              ),
+                              _TechCard(
+                                title: 'Backend & APIs',
+                                titleColor: Color(0xFF2FD0DE),
+                                skills: [
+                                  'Firebase',
+                                  'REST/HTTP APIs',
+                                  'Supabase',
+                                  'Python',
+                                  'Cloud Firestore',
+                                  'Real-time/WebSocket APIs',
+                                  'Third Party APIs',
+                                  'Local Storage',
+                                  'Stripe',
+                                ],
+                              ),
+                              _TechCard(
+                                title: 'Tools & Deployment',
+                                titleColor: Color(0xFF2FD0DE),
+                                skills: [
+                                  'Git & GitHub',
+                                  'App Store / Play Store',
+                                  'VS Code',
+                                  'Android Studio',
+                                ],
+                              ),
+                            ];
+
                             return Center(
                               child: SizedBox(
-                                width: (cardWidth * 2) + spacing,
+                                width: gridWidth,
                                 child: Wrap(
                                   spacing: spacing,
                                   runSpacing: spacing,
-                                  children: const [
-                                    Row(
-                                      children: [
-                                        _TechCard(
-                                          title: 'Mobile / Flutter',
-                                          titleColor: Color(0xFF2FD0DE),
-                                          skills: [
-                                            'Flutter',
-                                            'Dart',
-                                            'Material Design',
-                                            'Cupertino Widgets',
-                                            'Custom Animations',
-                                          ],
-                                        ),
-                                        Spacer(),
-                                        _TechCard(
-                                          title: 'State & Architecture',
-                                          titleColor: Color(0xFF2FD0DE),
-                                          skills: [
-                                            'Riverpod',
-                                            'Clean Architecture',
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        _TechCard(
-                                          title: 'Backend & APIs',
-                                          titleColor: Color(0xFF2FD0DE),
-                                          skills: [
-                                            'Firebase',
-                                            'REST/HTTP APIs',
-                                            'Supabase',
-                                            'Python',
-                                            'Cloud Firestore',
-                                            'Real-time/WebSocket APIs',
-                                            'Third Party APIs',
-                                            'Local Storage',
-                                            'Stripe',
-                                          ],
-                                        ),
-                                        Spacer(),
-                                        _TechCard(
-                                          title: 'Tools & Deployment',
-                                          titleColor: Color(0xFF2FD0DE),
-                                          skills: [
-                                            'Git & GitHub',
-                                            'App Store / Play Store',
-                                            'VS Code',
-                                            'Android Studio',
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  children: [
+                                    for (final card in cards)
+                                      SizedBox(
+                                        width: cardWidth,
+                                        height: 225,
+                                        child: card,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -717,8 +720,8 @@ class _TechCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 450,
-      height: skills.length > 5 ? 330 : 245,
+      width: double.infinity,
+      height: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFF181B20),
@@ -727,8 +730,6 @@ class _TechCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize:
-            MainAxisSize.min, // <-- This makes the card fit its content
         children: [
           Text(
             title,
@@ -739,30 +740,41 @@ class _TechCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: skills
-                .map(
-                  (skill) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade900,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      skill,
-                      style: TextStyle(
-                        color: Colors.grey.shade400,
-                        fontSize: 13,
-                      ),
-                    ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) => FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: skills
+                        .map(
+                          (skill) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade900,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              skill,
+                              style: TextStyle(
+                                color: Colors.grey.shade400,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
-                )
-                .toList(),
+                ),
+              ),
+            ),
           ),
         ],
       ),

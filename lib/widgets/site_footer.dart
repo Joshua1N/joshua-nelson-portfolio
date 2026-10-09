@@ -85,6 +85,7 @@ class SiteFooter extends StatelessWidget {
                   runSpacing: 10,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.email,
@@ -102,6 +103,7 @@ class SiteFooter extends StatelessWidget {
                       ],
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.phone,
