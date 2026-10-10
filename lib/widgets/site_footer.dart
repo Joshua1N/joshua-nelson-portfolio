@@ -80,48 +80,30 @@ class SiteFooter extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 22),
-                const Wrap(
-                  spacing: 16,
-                  runSpacing: 10,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.email,
-                          color: Color(0xFF69737A),
-                          size: 15,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          'Joshua.Nelson2005@gmail.com',
-                          style: TextStyle(
-                            color: Color(0xFF69737A),
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          color: Color(0xFF69737A),
-                          size: 15,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          '502-235-1803',
-                          style: TextStyle(
-                            color: Color(0xFF69737A),
-                            fontSize: 15,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
+                if (compact)
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ContactLine(
+                        icon: Icons.email,
+                        label: 'Joshua.Nelson2005@gmail.com',
+                      ),
+                      SizedBox(height: 10),
+                      _ContactLine(icon: Icons.phone, label: '502-235-1803'),
+                    ],
+                  )
+                else
+                  const Wrap(
+                    spacing: 16,
+                    runSpacing: 10,
+                    children: [
+                      _ContactLine(
+                        icon: Icons.email,
+                        label: 'Joshua.Nelson2005@gmail.com',
+                      ),
+                      _ContactLine(icon: Icons.phone, label: '502-235-1803'),
+                    ],
+                  ),
               ],
             ),
           );
@@ -236,10 +218,33 @@ class _AvailabilityDot extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Color(0xFF45D483),
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(color: Color(0x6645D483), blurRadius: 10),
-        ],
+        boxShadow: [BoxShadow(color: Color(0x6645D483), blurRadius: 10)],
       ),
+    );
+  }
+}
+
+class _ContactLine extends StatelessWidget {
+  const _ContactLine({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: const Color(0xFF69737A), size: 15),
+        const SizedBox(width: 4),
+        Flexible(
+          child: Text(
+            label,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: Color(0xFF69737A), fontSize: 15),
+          ),
+        ),
+      ],
     );
   }
 }

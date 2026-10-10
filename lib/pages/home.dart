@@ -86,7 +86,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    const projectsPerPage = 3;
+    final viewportSize = MediaQuery.sizeOf(context);
+    final isMobile = viewportSize.width < 700;
+    final sectionPadding = isMobile ? 20.0 : 48.0;
+    final sectionGap = isMobile ? 96.0 : 200.0;
+    final navPadding = viewportSize.width >= 1500
+        ? 500.0
+        : (isMobile ? 16.0 : 48.0);
+    final projectsPerPage = isMobile ? 1 : 3;
     final projectPageCount =
         (portfolioProjects.length + projectsPerPage - 1) ~/ projectsPerPage;
 
@@ -101,7 +108,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // Landing section with grid background
                 SizedBox(
-                  height: MediaQuery.of(context).size.height,
+                  height: isMobile && viewportSize.height < 940
+                      ? 940
+                      : viewportSize.height,
                   child: Stack(
                     children: [
                       // Grid background
@@ -143,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       // Landing content
                       Padding(
-                        padding: const EdgeInsets.only(top: 200),
+                        padding: EdgeInsets.only(top: isMobile ? 120 : 200),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,8 +171,8 @@ class _HomePageState extends State<HomePage> {
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 72,
+                                style: TextStyle(
+                                  fontSize: isMobile ? 44 : 72,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   height: 1.05,
@@ -191,32 +200,34 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 32),
                             // Description
                             SizedBox(
-                              width: 600,
+                              width: isMobile ? viewportSize.width - 40 : 600,
                               child: Text(
                                 'Building beautiful, natively compiled mobile and desktop applications from a single codebase. Passionate about pixel-perfect UIs, smooth animations, and great user experiences.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.grey.shade500,
-                                  fontSize: 20,
+                                  fontSize: isMobile ? 16 : 20,
                                   height: 1.4,
                                 ),
                               ),
                             ),
                             const SizedBox(height: 40),
                             // Buttons
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: isMobile ? 12 : 24,
+                              runSpacing: 12,
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF2FD0DE),
                                     foregroundColor: Colors.black,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 24,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isMobile ? 24 : 32,
+                                      vertical: isMobile ? 18 : 24,
                                     ),
-                                    textStyle: const TextStyle(
-                                      fontSize: 18,
+                                    textStyle: TextStyle(
+                                      fontSize: isMobile ? 16 : 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     shape: RoundedRectangleBorder(
@@ -226,7 +237,6 @@ class _HomePageState extends State<HomePage> {
                                   onPressed: _scrollToProjects,
                                   child: const Text('View Apps'),
                                 ),
-                                const SizedBox(width: 24),
                                 OutlinedButton(
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.white,
@@ -234,12 +244,12 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.grey.shade600,
                                       width: 1.5,
                                     ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 24,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isMobile ? 24 : 32,
+                                      vertical: isMobile ? 18 : 24,
                                     ),
-                                    textStyle: const TextStyle(
-                                      fontSize: 18,
+                                    textStyle: TextStyle(
+                                      fontSize: isMobile ? 16 : 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     shape: RoundedRectangleBorder(
@@ -276,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 200),
+                            SizedBox(height: isMobile ? 80 : 200),
                             const _BouncingArrow(),
                           ],
                         ),
@@ -287,312 +297,270 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 50),
                 // Rest of the page (no grid background)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 500),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "// ABOUT",
-                          key: _aboutKey,
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 47, 208, 222),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "A bit about me",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 40),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Profile card
-                            Container(
-                              width: 250,
-                              height: 250,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF181B20),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                  size: 72,
-                                ),
-                              ),
+                  padding: EdgeInsets.symmetric(horizontal: sectionPadding),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 920),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "// ABOUT",
+                            key: _aboutKey,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 47, 208, 222),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(width: 40),
-                            // Description and skills
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "I'm a dedicated Flutter developer with a passion for crafting high-performance, cross-platform mobile and desktop applications. With expertise in Dart and the Flutter ecosystem, I build apps that feel truly native on iOS, Android, and desktop from a single codebase.",
-                                    style: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontSize: 18,
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    "I focus on clean architecture, state management best practices, and delivering pixel-perfect UIs with buttery-smooth animations. From concept to App Store & Play Store deployment, I handle the full mobile development lifecycle.",
-                                    style: TextStyle(
-                                      color: Colors.grey.shade500,
-                                      fontSize: 16,
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            "A bit about me",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: isMobile ? 32 : 36,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 200),
-                        // TECH STACK SECTION
-                        Text(
-                          "// TECH STACK",
-                          key: _techKey,
-                          style: TextStyle(
-                            color: Color(0xFF2FD0DE),
-                            fontSize: 16,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.w500,
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          "Technologies I work with",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(height: isMobile ? 28 : 40),
+                          _AboutContent(isMobile: isMobile),
+                          SizedBox(height: sectionGap),
+                          // TECH STACK SECTION
+                          Text(
+                            "// TECH STACK",
+                            key: _techKey,
+                            style: TextStyle(
+                              color: Color(0xFF2FD0DE),
+                              fontSize: 16,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 40),
-                        // Tech cards grid
-                        LayoutBuilder(
-                          builder: (context, constraints) {
-                            const spacing = 20.0;
-                            final gridWidth = constraints.maxWidth > 920
-                                ? 920.0
-                                : constraints.maxWidth;
-                            final useTwoColumns = gridWidth >= 760;
-                            final cardWidth = useTwoColumns
-                                ? (gridWidth - spacing) / 2
-                                : gridWidth;
+                          const SizedBox(height: 12),
+                          Text(
+                            "Technologies I work with",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: isMobile ? 32 : 42,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          // Tech cards grid
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              const spacing = 20.0;
+                              final gridWidth = constraints.maxWidth > 920
+                                  ? 920.0
+                                  : constraints.maxWidth;
+                              final useTwoColumns = gridWidth >= 760;
+                              final cardWidth = useTwoColumns
+                                  ? (gridWidth - spacing) / 2
+                                  : gridWidth;
 
-                            const cards = [
-                              _TechCard(
-                                title: 'Mobile / Flutter',
-                                titleColor: Color(0xFF2FD0DE),
-                                skills: [
-                                  'Flutter',
-                                  'Dart',
-                                  'Material Design',
-                                  'Cupertino Widgets',
-                                  'Custom Animations',
-                                ],
-                              ),
-                              _TechCard(
-                                title: 'State & Architecture',
-                                titleColor: Color(0xFF2FD0DE),
-                                skills: ['Riverpod', 'Clean Architecture'],
-                              ),
-                              _TechCard(
-                                title: 'Backend & APIs',
-                                titleColor: Color(0xFF2FD0DE),
-                                skills: [
-                                  'Firebase',
-                                  'REST/HTTP APIs',
-                                  'Supabase',
-                                  'Python',
-                                  'Cloud Firestore',
-                                  'Real-time/WebSocket APIs',
-                                  'Third Party APIs',
-                                  'Local Storage',
-                                  'Stripe',
-                                ],
-                              ),
-                              _TechCard(
-                                title: 'Tools & Deployment',
-                                titleColor: Color(0xFF2FD0DE),
-                                skills: [
-                                  'Git & GitHub',
-                                  'App Store / Play Store',
-                                  'VS Code',
-                                  'Android Studio',
-                                ],
-                              ),
-                            ];
-
-                            return Center(
-                              child: SizedBox(
-                                width: gridWidth,
-                                child: Wrap(
-                                  spacing: spacing,
-                                  runSpacing: spacing,
-                                  children: [
-                                    for (final card in cards)
-                                      SizedBox(
-                                        width: cardWidth,
-                                        height: 225,
-                                        child: card,
-                                      ),
+                              const cards = [
+                                _TechCard(
+                                  title: 'Mobile / Flutter',
+                                  titleColor: Color(0xFF2FD0DE),
+                                  skills: [
+                                    'Flutter',
+                                    'Dart',
+                                    'Material Design',
+                                    'Cupertino Widgets',
+                                    'Custom Animations',
                                   ],
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 200),
-                        Text(
-                          "// PROJECTS",
-                          key: _projectsKey,
-                          style: TextStyle(
-                            color: Color(0xFF2FD0DE),
-                            fontSize: 16,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 16,
-                          runSpacing: 10,
-                          children: [
-                            Text(
-                              "Projects I've worked on",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 42,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (projectPageCount > 1)
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.swipe,
-                                    color: Color(0xFF2FD0DE),
-                                    size: 20,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'DRAG OR SCROLL FOR MORE',
-                                    style: TextStyle(
-                                      color: Color(0xFF2FD0DE),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 1,
-                                    ),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_forward,
-                                    color: Color(0xFF2FD0DE),
-                                    size: 18,
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        SizedBox(
-                          height: 600,
-                          child: Scrollbar(
-                            controller: _projectsPageController,
-                            thumbVisibility: projectPageCount > 1,
-                            trackVisibility: projectPageCount > 1,
-                            interactive: true,
-                            thickness: 9,
-                            radius: const Radius.circular(8),
-                            scrollbarOrientation: ScrollbarOrientation.bottom,
-                            child: ScrollConfiguration(
-                              behavior: const MaterialScrollBehavior().copyWith(
-                                dragDevices: {
-                                  PointerDeviceKind.touch,
-                                  PointerDeviceKind.mouse,
-                                  PointerDeviceKind.stylus,
-                                  PointerDeviceKind.trackpad,
-                                },
-                              ),
-                              child: PageView.builder(
-                                controller: _projectsPageController,
-                                itemCount: projectPageCount,
-                                pageSnapping: true,
-                                physics: const PageScrollPhysics(
-                                  parent: ClampingScrollPhysics(),
+                                _TechCard(
+                                  title: 'State & Architecture',
+                                  titleColor: Color(0xFF2FD0DE),
+                                  skills: ['Riverpod', 'Clean Architecture'],
                                 ),
-                                itemBuilder: (context, pageIndex) {
-                                  final projects = portfolioProjects
-                                      .skip(pageIndex * projectsPerPage)
-                                      .take(projectsPerPage);
+                                _TechCard(
+                                  title: 'Backend & APIs',
+                                  titleColor: Color(0xFF2FD0DE),
+                                  skills: [
+                                    'Firebase',
+                                    'REST/HTTP APIs',
+                                    'Supabase',
+                                    'Python',
+                                    'Cloud Firestore',
+                                    'Real-time/WebSocket APIs',
+                                    'Third Party APIs',
+                                    'Local Storage',
+                                    'Stripe',
+                                  ],
+                                ),
+                                _TechCard(
+                                  title: 'Tools & Deployment',
+                                  titleColor: Color(0xFF2FD0DE),
+                                  skills: [
+                                    'Git & GitHub',
+                                    'App Store / Play Store',
+                                    'VS Code',
+                                    'Android Studio',
+                                  ],
+                                ),
+                              ];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 18),
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) => FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        alignment: Alignment.topCenter,
-                                        child: SizedBox(
-                                          width: constraints.maxWidth,
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: projects
-                                                .map(
-                                                  (project) => Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          bottom: 16,
-                                                        ),
-                                                    child: ProjectListCard(
-                                                      project: project,
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                          context,
-                                                        ).push(
-                                                          MaterialPageRoute<
-                                                            void
-                                                          >(
-                                                            builder: (_) =>
-                                                                ProjectDetailPage(
-                                                                  project:
-                                                                      project,
-                                                                ),
+                              return Center(
+                                child: SizedBox(
+                                  width: gridWidth,
+                                  child: Wrap(
+                                    spacing: spacing,
+                                    runSpacing: spacing,
+                                    children: [
+                                      for (final card in cards)
+                                        SizedBox(
+                                          width: cardWidth,
+                                          height: 225,
+                                          child: card,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: sectionGap),
+                          Text(
+                            "// PROJECTS",
+                            key: _projectsKey,
+                            style: TextStyle(
+                              color: Color(0xFF2FD0DE),
+                              fontSize: 16,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 16,
+                            runSpacing: 10,
+                            children: [
+                              Text(
+                                "Projects I've worked on",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: isMobile ? 32 : 42,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (projectPageCount > 1)
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.swipe,
+                                      color: Color(0xFF2FD0DE),
+                                      size: 20,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'DRAG OR SCROLL FOR MORE',
+                                      style: TextStyle(
+                                        color: Color(0xFF2FD0DE),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 1,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Color(0xFF2FD0DE),
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 32),
+                          SizedBox(
+                            height: isMobile ? 430 : 600,
+                            child: Scrollbar(
+                              controller: _projectsPageController,
+                              thumbVisibility: projectPageCount > 1,
+                              trackVisibility: projectPageCount > 1,
+                              interactive: true,
+                              thickness: 9,
+                              radius: const Radius.circular(8),
+                              scrollbarOrientation: ScrollbarOrientation.bottom,
+                              child: ScrollConfiguration(
+                                behavior: const MaterialScrollBehavior()
+                                    .copyWith(
+                                      dragDevices: {
+                                        PointerDeviceKind.touch,
+                                        PointerDeviceKind.mouse,
+                                        PointerDeviceKind.stylus,
+                                        PointerDeviceKind.trackpad,
+                                      },
+                                    ),
+                                child: PageView.builder(
+                                  controller: _projectsPageController,
+                                  itemCount: projectPageCount,
+                                  pageSnapping: true,
+                                  physics: const PageScrollPhysics(
+                                    parent: ClampingScrollPhysics(),
+                                  ),
+                                  itemBuilder: (context, pageIndex) {
+                                    final projects = portfolioProjects
+                                        .skip(pageIndex * projectsPerPage)
+                                        .take(projectsPerPage);
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 18),
+                                      child: LayoutBuilder(
+                                        builder: (context, constraints) => FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          alignment: Alignment.topCenter,
+                                          child: SizedBox(
+                                            width: constraints.maxWidth,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: projects
+                                                  .map(
+                                                    (project) => Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            bottom: 16,
                                                           ),
-                                                        );
-                                                      },
+                                                      child: ProjectListCard(
+                                                        project: project,
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).push(
+                                                            MaterialPageRoute<
+                                                              void
+                                                            >(
+                                                              builder: (_) =>
+                                                                  ProjectDetailPage(
+                                                                    project:
+                                                                        project,
+                                                                  ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
                                                     ),
-                                                  ),
-                                                )
-                                                .toList(),
+                                                  )
+                                                  .toList(),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 120),
-                      ],
+                          SizedBox(height: isMobile ? 80 : 120),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -633,9 +601,9 @@ class _HomePageState extends State<HomePage> {
                     : null,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 500,
-                  vertical: 30,
+                padding: EdgeInsets.symmetric(
+                  horizontal: navPadding,
+                  vertical: isMobile ? 16 : 30,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -648,18 +616,30 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Row(
-                      children: [
-                        _NavItem(
-                          'About',
-                          onPressed: () => _scrollToSection(_aboutKey),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            _NavItem(
+                              'About',
+                              compact: isMobile,
+                              onPressed: () => _scrollToSection(_aboutKey),
+                            ),
+                            _NavItem(
+                              'Tech',
+                              compact: isMobile,
+                              onPressed: () => _scrollToSection(_techKey),
+                            ),
+                            _NavItem(
+                              'Projects',
+                              compact: isMobile,
+                              onPressed: _scrollToProjects,
+                            ),
+                          ],
                         ),
-                        _NavItem(
-                          'Tech',
-                          onPressed: () => _scrollToSection(_techKey),
-                        ),
-                        _NavItem('Projects', onPressed: _scrollToProjects),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -672,12 +652,75 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class _AboutContent extends StatelessWidget {
+  const _AboutContent({required this.isMobile});
+
+  final bool isMobile;
+
+  @override
+  Widget build(BuildContext context) {
+    final profile = Container(
+      width: isMobile ? 160 : 250,
+      height: isMobile ? 160 : 250,
+      decoration: BoxDecoration(
+        color: const Color(0xFF181B20),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Icon(Icons.person, color: Colors.grey, size: isMobile ? 56 : 72),
+    );
+
+    final description = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "I'm a dedicated Flutter developer with a passion for crafting high-performance, cross-platform mobile and desktop applications. With expertise in Dart and the Flutter ecosystem, I build apps that feel truly native on iOS, Android, and desktop from a single codebase.",
+          style: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: isMobile ? 16 : 18,
+            height: 1.5,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "I focus on clean architecture, state management best practices, and delivering pixel-perfect UIs with buttery-smooth animations. From concept to App Store & Play Store deployment, I handle the full mobile development lifecycle.",
+          style: TextStyle(
+            color: Colors.grey.shade500,
+            fontSize: isMobile ? 15 : 16,
+            height: 1.5,
+          ),
+        ),
+      ],
+    );
+
+    if (isMobile) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(child: profile),
+          const SizedBox(height: 28),
+          description,
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        profile,
+        const SizedBox(width: 40),
+        Expanded(child: description),
+      ],
+    );
+  }
+}
+
 // Navbar item widget
 class _NavItem extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
+  final bool compact;
 
-  const _NavItem(this.label, {this.onPressed});
+  const _NavItem(this.label, {this.onPressed, this.compact = false});
 
   @override
   State<_NavItem> createState() => _NavItemState();
@@ -689,12 +732,22 @@ class _NavItemState extends State<_NavItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: widget.compact ? 1 : 16),
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
         child: TextButton(
-          style: TextButton.styleFrom(overlayColor: Colors.transparent),
+          style: TextButton.styleFrom(
+            overlayColor: Colors.transparent,
+            padding: widget.compact
+                ? const EdgeInsets.symmetric(horizontal: 6, vertical: 8)
+                : null,
+            minimumSize: widget.compact ? Size.zero : null,
+            tapTargetSize: widget.compact
+                ? MaterialTapTargetSize.shrinkWrap
+                : null,
+            visualDensity: widget.compact ? VisualDensity.compact : null,
+          ),
           onPressed: widget.onPressed ?? () {},
           child: Text(
             widget.label,
@@ -702,7 +755,7 @@ class _NavItemState extends State<_NavItem> {
               color: _isHovered
                   ? const Color(0xFF2FD0DE)
                   : Colors.grey.shade500,
-              fontSize: 18,
+              fontSize: widget.compact ? 13 : 18,
               fontWeight: FontWeight.w500,
               shadows: _isHovered
                   ? [
